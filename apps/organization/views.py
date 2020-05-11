@@ -2,7 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic.base import View
 from django.contrib.auth import authenticate
+from django.db.models import Q
 from organization.models import *
+from course.models import *
 from operation.models import UserFavorite
 from pure_pagination import Paginator,PageNotAnInteger
 from .froms import UserAskForm
