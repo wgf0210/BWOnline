@@ -160,6 +160,7 @@ function add_fav(current_elem, fav_id, fav_type){
                 }
 
             }else if(data.status == 'success'){
+                alert(data.msg)
                 current_elem.text(data.msg)
             }
         },
