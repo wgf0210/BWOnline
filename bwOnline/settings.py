@@ -24,14 +24,14 @@ sys.path.insert(0,os.path.join(BASE_DIR,'apps'))
 SECRET_KEY = '&syr164dwyc5=psgcouirxuhj7sbms3tug6iaztdm(c&hobn48'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 # 不适用系统自带的后台user，使用自己的
 AUTH_USER_MODEL = 'users.UserProfile'
 # 自定义登录验证
 AUTHENTICATION_BACKENDS = (
     'users.views.CustomBackend',
 )
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'operation',
     'organization',
     'pure_pagination',
+    'DjangoUeditor',
     
 ]
 

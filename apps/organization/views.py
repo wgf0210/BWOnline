@@ -18,6 +18,7 @@ class OrgView(View):
         all_citys = CityDict.objects.all()   # 所有城市
         org_nums = all_orgs.count()    # 有多少家机构
         hot_orgs = all_orgs.order_by('-click_nums')[:3]   # 热门课程机构排名
+
         # 机构搜索功能
         search_keywords = request.GET.get('keywords', '')
         if search_keywords:
@@ -83,6 +84,8 @@ class OrgHomeView(View):
         current_page = 'home'
         # 根据id找到课程机构
         course_org = CourseOrg.objects.get(id=int(org_id))
+        course_org.click_nums += 1
+        course_org.save()
         # 反向查询课程机构的所有课程和老师
         all_courses = course_org.course_set.all()[:4]
         all_teacher = course_org.teacher_set.all()[:2]
@@ -158,6 +161,7 @@ class AddFavView(View):
             return HttpResponse('{"status":"fail", "msg":"用户未登录"}', content_type='application/json')
 
         exist_record = UserFavorite.objects.filter(user=request.user, fav_id=int(id), fav_type=int(type))
+        '''减得时候'''
         if exist_record:
             # 如果记录已经存在，表示用户取消收藏
             exist_record.delete()
@@ -181,6 +185,7 @@ class AddFavView(View):
                 teacher.save()
             return HttpResponse('{"status":"success", "msg":"收藏"}', content_type='application/json')
         else:
+            '''加的时候'''
             user_fav = UserFavorite()
             if int(type) > 0 and int(id) > 0:
                 user_fav.fav_id = int(id)
@@ -205,5 +210,68 @@ class AddFavView(View):
                 return HttpResponse('{"status":"fail", "msg":"收藏出错"}', content_type='application/json')
 
 
-        
+'''讲师列表'''
+class TeacherListView(View):
+    def get(self, request):
+        all_teachers = Teacher.objects.all()
+        teacher_nums = all_teachers.count()
+        # 搜索
+        search_keywords = request.GET.get('keywords', '')
+        if search_keywords:
+            # 在name字段进行操作,做like语句的操作。i代表不区分大小写，or操作使用Q
+            all_teachers = all_teachers.filter(name__icontains=search_keywords)
+
+        # 人气排序
+        sort = request.GET.get('sort','')
+        if sort:
+            if sort == 'hot':
+                all_teachers = all_teachers.order_by('-click_nums')
+        # 教师排行
+        sorted_teacher = Teacher.objects.all().order_by('-click_nums')[:3]
+
+
+        # 进行分页
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        p = Paginator(all_teachers, 2, request=request)
+        teachers = p.page(page)
+        return render(request, "teachers-list.html", {
+            "all_teachers":teachers,"teacher_nums": teacher_nums,'sort':sort,'sorted_teacher':sorted_teacher,
+        })
+
+
+'''讲师详情'''
+class TeacherDetailView(View):
+    def get(self,request,teacher_id):
+        teacher = Teacher.objects.get(id=int(teacher_id))
+        all_course = Course.objects.filter(teacher=teacher)
+        teacher.click_nums += 1
+        teacher.save()
+        # 讲师排行
+        sorted_teacher = Teacher.objects.all().order_by('-click_nums')[:3]
+
+        # 收藏
+        has_teacher_faved = False
+        if UserFavorite.objects.filter(user=request.user, fav_type=3, fav_id=teacher.id):
+            has_teacher_faved = True
+        has_org_faved = False
+        if UserFavorite.objects.filter(user=request.user, fav_type=2, fav_id=teacher.org.id):
+            has_org_faved = True
+
+        return render(request,'teacher-detail.html',{
+            'teacher':teacher,
+            'all_course':all_course,
+            'sorted_teacher':sorted_teacher,
+            'has_teacher_faved':has_teacher_faved,
+            'has_org_faved':has_org_faved,
+        })
+
+
+
+
+
+
+
 

@@ -9,6 +9,6 @@ urlpatterns = [
     re_path('info/(?P<course_id>\d+)/',CourseInfoView.as_view(),name='course_info'),
     re_path('comments/(?P<course_id>\d+)/',CommentsView.as_view(),name='course_comments'),
     path('add_comment/', AddCommentsView.as_view(), name="add_comment"),
-    path('video/(?P<video_id>\d+)/', VideoPlayView.as_view(), name="video_play"),
+    re_path('video/(?P<video_id>\d+)/', VideoPlayView.as_view(), name="video_play"),
 
 ]

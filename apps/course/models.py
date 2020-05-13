@@ -25,6 +25,7 @@ class Course(models.Model):
         upload_to="courses/%Y/%m",
         verbose_name=u"封面图",
         max_length=100)
+    is_banner = models.BooleanField('是否轮播',default=False)
     # 保存点击量，点进页面就算
     click_nums = models.IntegerField(default=0, verbose_name=u"点击数")
     tag = models.CharField('课程标签',default='',max_length=10)
@@ -41,6 +42,7 @@ class Course(models.Model):
     def get_zj_nums(self):
         #获取课程的章节数
         return self.lesson_set.all().count()
+    
 
     def get_learn_users(self):
         #获取这门课程的学习用户
@@ -106,3 +108,12 @@ class CourseResource(models.Model):
     class Meta:
         verbose_name = u"课程资源"
         verbose_name_plural = verbose_name
+
+
+'''显示轮播课程'''
+class BannerCourse(Course):
+    class Meta:
+        verbose_name = '轮播课程'
+        verbose_name_plural = verbose_name
+        #这里必须设置proxy=True，这样就不会再生成一张表，同时还具有Model的功能
+        proxy = True
