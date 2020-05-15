@@ -31,6 +31,7 @@ AUTH_USER_MODEL = 'users.UserProfile'
 AUTHENTICATION_BACKENDS = (
     'users.views.CustomBackend',
 )
+# 设置可以访问的域名
 ALLOWED_HOSTS = ['*']
 
 
@@ -144,6 +145,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR,'static'),
 )
+STATIC_ROOT = os.path.join(BASE_DIR,'static/')
 
 # 配置邮箱
 EMAIL_HOST = 'smtp.qq.com'    #新浪不用，QQ用

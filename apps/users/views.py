@@ -15,21 +15,21 @@ from pure_pagination import Paginator,PageNotAnInteger
 from django.urls import reverse
 
 # sql注入测试代码
-class LoginUnsafeView(View):
-    def get(self,request):
-        return render(request,'login.html',{})
-    def post(self,request):
-        user_name = request.POST.get('username','')
-        pass_word = request.POST.get('password','')
-        import MySQLdb
-        conn = MySQLdb.connect(host-'127.0.0.1',user='root',password='002598',db='bwonline_db',charset='utf8')
-        cursor = conn.cursor()
-        sql_select = 'select * from users_userprofile where email="{0}" and password="{1}"'.format(user_name,pass_word)
-        result = cursor.execute(sql_select)
-        for row in cursor.fetchall():
-            # 查询到用户
-            pass    
-        # print 'test'
+# class LoginUnsafeView(View):
+#     def get(self,request):
+#         return render(request,'login.html',{})
+#     def post(self,request):
+#         user_name = request.POST.get('username','')
+#         pass_word = request.POST.get('password','')
+#         import MySQLdb
+#         conn = MySQLdb.connect(host-'127.0.0.1',user='root',password='002598',db='bwonline_db',charset='utf8')
+#         cursor = conn.cursor()
+#         sql_select = 'select * from users_userprofile where email="{0}" and password="{1}"'.format(user_name,pass_word)
+#         result = cursor.execute(sql_select)
+#         for row in cursor.fetchall():
+#             # 查询到用户
+#             pass    
+#         # print 'test'
 
 
 #邮箱和用户名都可以登录
